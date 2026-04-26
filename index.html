@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Platypus — Extraordinary</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,200;0,300;0,400;1,200;1,300&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:       oklch(96.5% 0.012 82);
+      --cream-mid:   oklch(91%   0.018 78);
+      --tan:         oklch(72%   0.045 75);
+      --earth:       oklch(48%   0.04  68);
+      --moss:        oklch(46%   0.07 142);
+      --moss-light:  oklch(72%   0.06 142);
+      --ink:         oklch(16%   0.018 75);
+      --ink-soft:    oklch(35%   0.022 75);
+      --ink-faint:   oklch(55%   0.018 75);
+      --glass-bg:    oklch(97% 0.01 82 / 0.72);
+      --glass-border:oklch(80% 0.02 82 / 0.5);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Jost', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 48px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(24px) saturate(1.6);
+      -webkit-backdrop-filter: blur(24px) saturate(1.6);
+      border-bottom: 1px solid var(--glass-border);
+      opacity: 0;
+      transform: translateY(-8px);
+      animation: fadeDown 0.8s cubic-bezier(0.22,1,0.36,1) 0.2s forwards;
+    }
+
+    .nav-logo {
+      font-family: 'Cormorant', serif;
+      font-weight: 200;
+      font-size: 18px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 36px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 12px;
+      font-weight: 300;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      text-decoration: none;
+      transition: color 0.25s;
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left: 0;
+      width: 0; height: 1px;
+      background: var(--moss);
+      transition: width 0.3s cubic-bezier(0.22,1,0.36,1);
+    }
+
+    .nav-links a:hover { color: var(--ink); }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-links a.active { color: var(--ink); }
+    .nav-links a.active::after { width: 100%; }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      min-height: 600px;
+      overflow: hidden;
+    }
+
+    .hero-img {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center 45%;
+      filter: saturate(0.82) brightness(0.95);
+    }
+
+    /* Gradient veil — left-heavy so text is readable */
+    .hero-veil {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(
+          105deg,
+          oklch(96.5% 0.012 82 / 0.88) 0%,
+          oklch(96.5% 0.012 82 / 0.72) 32%,
+          oklch(96.5% 0.012 82 / 0.20) 60%,
+          transparent 75%
+        );
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      height: 100%;
+      padding: 80px 80px 80px 80px;
+      max-width: 680px;
+    }
+
+    .hero-eyebrow {
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--moss);
+      margin-bottom: 28px;
+      opacity: 0;
+      transform: translateY(14px);
+      animation: riseIn 0.9s cubic-bezier(0.22,1,0.36,1) 0.55s forwards;
+    }
+
+    .hero-headline {
+      font-family: 'Cormorant', serif;
+      font-weight: 200;
+      font-size: clamp(72px, 9vw, 130px);
+      line-height: 0.92;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      margin-bottom: 32px;
+      opacity: 0;
+      transform: translateY(22px);
+      animation: riseIn 1.1s cubic-bezier(0.22,1,0.36,1) 0.72s forwards;
+    }
+
+    .hero-headline em {
+      font-style: italic;
+      color: var(--earth);
+    }
+
+    .hero-subhead {
+      font-size: clamp(15px, 1.5vw, 18px);
+      font-weight: 300;
+      line-height: 1.65;
+      color: var(--ink-soft);
+      max-width: 400px;
+      margin-bottom: 52px;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: riseIn 1s cubic-bezier(0.22,1,0.36,1) 0.92s forwards;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 36px;
+      background: var(--ink);
+      color: var(--cream);
+      font-family: 'Jost', sans-serif;
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.25s, gap 0.3s;
+      opacity: 0;
+      transform: translateY(14px);
+      animation: riseIn 0.9s cubic-bezier(0.22,1,0.36,1) 1.1s forwards;
+    }
+
+    .hero-cta:hover {
+      background: var(--moss);
+      gap: 20px;
+    }
+
+    .hero-cta-arrow {
+      font-size: 14px;
+      transition: transform 0.3s;
+    }
+
+    .hero-cta:hover .hero-cta-arrow {
+      transform: translateX(4px);
+    }
+
+    /* scroll indicator */
+    .scroll-hint {
+      position: absolute;
+      bottom: 36px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      opacity: 0;
+      animation: riseIn 1s cubic-bezier(0.22,1,0.36,1) 1.5s forwards;
+    }
+
+    .scroll-hint span {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 44px;
+      background: linear-gradient(to bottom, var(--ink-faint), transparent);
+      animation: scrollPulse 2s ease-in-out 1.8s infinite;
+    }
+
+    /* ── TEASER STRIP ── */
+    .teaser {
+      background: var(--cream-mid);
+      padding: 96px 80px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 2px;
+    }
+
+    .teaser-item {
+      padding: 56px 48px;
+      background: var(--cream);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      transition: background 0.3s;
+    }
+
+    .teaser-item:hover { background: oklch(94% 0.018 82); }
+
+    .teaser-num {
+      font-family: 'Cormorant', serif;
+      font-size: 11px;
+      font-weight: 300;
+      letter-spacing: 0.2em;
+      color: var(--moss);
+    }
+
+    .teaser-title {
+      font-family: 'Cormorant', serif;
+      font-weight: 300;
+      font-size: 28px;
+      color: var(--ink);
+      line-height: 1.2;
+    }
+
+    .teaser-desc {
+      font-size: 13px;
+      font-weight: 300;
+      line-height: 1.7;
+      color: var(--ink-soft);
+      flex: 1;
+    }
+
+    .teaser-link {
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--moss);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: gap 0.3s;
+    }
+
+    .teaser-link:hover { gap: 14px; }
+
+    /* ── QUOTE BAND ── */
+    .quote-band {
+      padding: 120px 80px;
+      display: flex;
+      justify-content: center;
+      background: var(--cream);
+    }
+
+    .quote-inner {
+      max-width: 760px;
+      text-align: center;
+    }
+
+    .quote-text {
+      font-family: 'Cormorant', serif;
+      font-style: italic;
+      font-weight: 200;
+      font-size: clamp(26px, 3.5vw, 46px);
+      line-height: 1.45;
+      color: var(--ink);
+      margin-bottom: 28px;
+    }
+
+    .quote-attr {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+    }
+
+    .quote-rule {
+      width: 40px;
+      height: 1px;
+      background: var(--moss);
+      margin: 0 auto 24px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 32px 80px;
+      border-top: 1px solid var(--glass-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    footer p {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      color: var(--ink-faint);
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeDown {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes riseIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="#">Platypus</a>
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="facts.html">Facts</a></li>
+      <li><a href="habitat.html">Habitat</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="sources.html">Sources</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <video class="hero-img" autoplay muted loop playsinline poster="uploads/240_F_1190936208_oV443m2wr7pBtk08gkcxCRR4bLbEglrs.jpg">
+      <source src="uploads/vecteezy_unique-platypus-in-natural-habitat-close-up-view-in-water_72830652.mp4" type="video/mp4" />
+    </video>
+    <div class="hero-veil"></div>
+
+    <div class="hero-content">
+      <p class="hero-eyebrow">Ornithorhynchus anatinus</p>
+      <h1 class="hero-headline">Extra<em>ordinary.</em></h1>
+      <p class="hero-subhead">Meet the platypus — nature's most unlikely animal.</p>
+      <a href="#discover" class="hero-cta">
+        Discover More
+        <span class="hero-cta-arrow">→</span>
+      </a>
+    </div>
+
+    <div class="scroll-hint">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- TEASER STRIP -->
+  <section class="teaser" id="discover">
+    <div class="teaser-item">
+      <span class="teaser-num">01 — Facts</span>
+      <h2 class="teaser-title">A creature of contradictions</h2>
+      <p class="teaser-desc">It lays eggs, nurses young with milk, senses electric fields, and carries venom. The platypus breaks every rule biology thought it had written.</p>
+      <a href="facts.html" class="teaser-link">Explore Facts →</a>
+    </div>
+    <div class="teaser-item">
+      <span class="teaser-num">02 — Habitat</span>
+      <h2 class="teaser-title">Waterways of eastern Australia</h2>
+      <p class="teaser-desc">From the cool streams of Queensland to the cold rivers of Tasmania, the platypus carves a quiet life along the margins of fresh water.</p>
+      <a href="habitat.html" class="teaser-link">Explore Habitat →</a>
+    </div>
+    <div class="teaser-item">
+      <span class="teaser-num">03 — Gallery</span>
+      <h2 class="teaser-title">Seen up close</h2>
+      <p class="teaser-desc">Rarely photographed in the wild, the platypus rewards patience. A curated collection of the most remarkable imagery from the field.</p>
+      <a href="gallery.html" class="teaser-link">View Gallery →</a>
+    </div>
+  </section>
+
+  <!-- QUOTE -->
+  <section class="quote-band">
+    <div class="quote-inner">
+      <div class="quote-rule"></div>
+      <p class="quote-text">"When Europeans first encountered the platypus, a scientist suspected the specimen had been stitched together as a hoax."</p>
+      <p class="quote-attr">Natural History, 1799</p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2026 Platypus — A Natural History</p>
+    <p>A six-page web presentation</p>
+  </footer>
+
+</body>
+</html>

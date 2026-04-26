@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Platypus — Gallery</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,200;0,300;0,400;1,200;1,300&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:       oklch(96.5% 0.012 82);
+      --cream-mid:   oklch(91%   0.018 78);
+      --tan:         oklch(72%   0.045 75);
+      --earth:       oklch(48%   0.04  68);
+      --moss:        oklch(46%   0.07 142);
+      --ink:         oklch(16%   0.018 75);
+      --ink-soft:    oklch(35%   0.022 75);
+      --ink-faint:   oklch(55%   0.018 75);
+      --glass-bg:    oklch(97% 0.01 82 / 0.72);
+      --glass-border:oklch(80% 0.02 82 / 0.5);
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Jost', sans-serif; background: var(--cream); color: var(--ink); overflow-x: hidden; }
+
+    /* NAV */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 48px; background: var(--glass-bg); backdrop-filter: blur(24px) saturate(1.6); -webkit-backdrop-filter: blur(24px) saturate(1.6); border-bottom: 1px solid var(--glass-border); }
+    .nav-logo { font-family: 'Cormorant', serif; font-weight: 200; font-size: 18px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink); text-decoration: none; }
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a { font-size: 12px; font-weight: 300; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-soft); text-decoration: none; transition: color 0.25s; position: relative; }
+    .nav-links a::after { content: ''; position: absolute; bottom: -3px; left: 0; width: 0; height: 1px; background: var(--moss); transition: width 0.3s cubic-bezier(0.22,1,0.36,1); }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-links a.active { color: var(--ink); }
+    .nav-links a.active::after { width: 100%; }
+
+    /* PAGE HEADER */
+    .page-header { padding: 140px 80px 72px; border-bottom: 1px solid var(--glass-border); display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: end; }
+    .page-eyebrow { font-size: 11px; font-weight: 400; letter-spacing: 0.22em; text-transform: uppercase; color: var(--moss); margin-bottom: 20px; }
+    .page-title { font-family: 'Cormorant', serif; font-weight: 200; font-size: clamp(52px, 6vw, 96px); line-height: 0.9; color: var(--ink); }
+    .page-title em { font-style: italic; color: var(--earth); }
+    .page-intro { font-size: 15px; font-weight: 300; line-height: 1.75; color: var(--ink-soft); max-width: 440px; align-self: end; }
+    .photo-count { font-size: 11px; letter-spacing: 0.16em; color: var(--ink-faint); margin-top: 16px; }
+
+    /* MASONRY GRID */
+    .gallery-grid {
+      padding: 48px 48px 80px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-auto-rows: 280px;
+      gap: 10px;
+    }
+
+    .gallery-item {
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .gallery-item.wide { grid-column: span 2; }
+    .gallery-item.tall { grid-row: span 2; }
+    .gallery-item.wide-tall { grid-column: span 2; grid-row: span 2; }
+
+    .gallery-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: saturate(0.82) brightness(0.98);
+      transition: transform 0.7s cubic-bezier(0.22,1,0.36,1), filter 0.4s;
+    }
+    .gallery-item:hover img {
+      transform: scale(1.05);
+      filter: saturate(1) brightness(1.02);
+    }
+
+    /* caption overlay on hover */
+    .gallery-item .caption {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 28px 20px 18px;
+      background: linear-gradient(transparent, oklch(10% 0.02 75 / 0.55));
+      opacity: 0;
+      transition: opacity 0.35s;
+      display: flex;
+      align-items: flex-end;
+    }
+    .gallery-item:hover .caption { opacity: 1; }
+    .caption span { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: oklch(95% 0.01 82); }
+
+    /* LIGHTBOX */
+    .lightbox {
+      display: none;
+      position: fixed; inset: 0; z-index: 200;
+      background: oklch(8% 0.01 75 / 0.94);
+      backdrop-filter: blur(16px);
+      align-items: center; justify-content: center;
+    }
+    .lightbox.open { display: flex; }
+    .lightbox-inner { position: relative; max-width: 90vw; max-height: 90vh; }
+    .lightbox-inner img { max-width: 90vw; max-height: 88vh; object-fit: contain; display: block; }
+    .lightbox-close {
+      position: absolute; top: -40px; right: 0;
+      font-family: 'Jost', sans-serif; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+      color: oklch(70% 0.02 82); cursor: pointer; background: none; border: none;
+      transition: color 0.2s;
+    }
+    .lightbox-close:hover { color: white; }
+    .lightbox-nav {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      background: none; border: none; cursor: pointer;
+      color: oklch(70% 0.02 82); font-size: 24px;
+      transition: color 0.2s; padding: 8px 16px;
+    }
+    .lightbox-nav:hover { color: white; }
+    .lightbox-prev { left: -56px; }
+    .lightbox-next { right: -56px; }
+
+    /* FOOTER */
+    footer { padding: 32px 80px; border-top: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center; }
+    footer p { font-size: 11px; letter-spacing: 0.1em; color: var(--ink-faint); }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a class="nav-logo" href="index.html">Platypus</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="facts.html">Facts</a></li>
+      <li><a href="habitat.html">Habitat</a></li>
+      <li><a href="gallery.html" class="active">Gallery</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="sources.html">Sources</a></li>
+    </ul>
+  </nav>
+
+  <header class="page-header">
+    <div>
+      <p class="page-eyebrow">In the field</p>
+      <h1 class="page-title">The<br /><em>platypus</em><br />seen.</h1>
+      <p class="photo-count">19 photographs</p>
+    </div>
+    <p class="page-intro">Rarely captured on film, the platypus rewards those who wait. A curated collection of field photographs — from burrow entrances to underwater glides.</p>
+  </header>
+
+  <main class="gallery-grid" id="galleryGrid">
+
+    <!-- Row 1 -->
+    <div class="gallery-item wide-tall" data-caption="Underwater — eastern Australia">
+      <img src="uploads/240_F_1644108809_MrOqg5dk0lbZkrmUBioloHBIomE7WqF0.jpg" alt="Platypus underwater wide shot" />
+      <div class="caption"><span>Underwater — eastern Australia</span></div>
+    </div>
+    <div class="gallery-item tall" data-caption="Foraging at the water's edge">
+      <img src="uploads/240_F_1101777271_s2p4tK0XCukhrJ9R7XlI2paVc5HDt6Rh.jpg" alt="Platypus foraging" />
+      <div class="caption"><span>Foraging at the water's edge</span></div>
+    </div>
+    <div class="gallery-item" data-caption="Newborn puggles">
+      <img src="uploads/babies.webp" alt="Baby platypuses" />
+      <div class="caption"><span>Newborn puggles</span></div>
+    </div>
+
+    <!-- Row 2 (wide-tall above fills rows 1–2 cols 1–2) -->
+    <div class="gallery-item" data-caption="A juvenile platypus with eggs">
+      <img src="uploads/eggs.jpg" alt="Platypus with eggs" />
+      <div class="caption"><span>A juvenile platypus with eggs</span></div>
+    </div>
+
+    <!-- Row 3 -->
+    <div class="gallery-item" data-caption="Resting on the bank">
+      <img src="uploads/chillin.webp" alt="Platypus resting" />
+      <div class="caption"><span>Resting on the bank</span></div>
+    </div>
+    <div class="gallery-item" data-caption="Entering the burrow">
+      <img src="uploads/den.webp" alt="Platypus burrow entrance" />
+      <div class="caption"><span>Burrow entrance, riverbank</span></div>
+    </div>
+    <div class="gallery-item" data-caption="Foraging underwater">
+      <img src="uploads/eating.webp" alt="Platypus eating" />
+      <div class="caption"><span>Foraging underwater</span></div>
+    </div>
+
+    <!-- Row 4 -->
+    <div class="gallery-item wide" data-caption="Split-level — rainforest stream, Queensland">
+      <img src="uploads/swimming.jpg" alt="Platypus swimming underwater" style="object-position: center 40%;" />
+      <div class="caption"><span>Split-level — rainforest stream, Queensland</span></div>
+    </div>
+    <div class="gallery-item" data-caption="Walking on dry ground">
+      <img src="uploads/240_F_1190936208_oV443m2wr7pBtk08gkcxCRR4bLbEglrs-aeb2af2c.jpg" alt="Platypus on land" />
+      <div class="caption"><span>Walking on dry ground</span></div>
+    </div>
+
+    <!-- Row 5 -->
+    <div class="gallery-item" data-caption="On the riverbank">
+      <img src="uploads/240_F_1325808563_hpTiroaO0oVfCP0HOqrdJhd6ewdbN465.jpg" alt="Platypus on bank" />
+      <div class="caption"><span>On the riverbank</span></div>
+    </div>
+    <div class="gallery-item" data-caption="Mother and puggle">
+      <img src="uploads/240_F_1424646678_mHu8B2FczKVW5n0LvbRfGeLLXowWXxfR.jpg" alt="Platypus mother and baby" />
+      <div class="caption"><span>Mother and puggle</span></div>
+    </div>
+    <div class="gallery-item" data-caption="Skeleton — natural history collection">
+      <img src="uploads/skeleton.avif" alt="Platypus skeleton" />
+      <div class="caption"><span>Skeleton — natural history collection</span></div>
+    </div>
+
+    <!-- Row 6 -->
+    <div class="gallery-item wide" data-caption="Swimming in a creek — Healesville, Victoria">
+      <img src="uploads/swimming2.jpg" alt="Platypus swimming" />
+      <div class="caption"><span>Swimming in a creek — Healesville, Victoria</span></div>
+    </div>
+    <div class="gallery-item" data-caption="Surface swimming">
+      <img src="uploads/p1.jpg" alt="Platypus from above" />
+      <div class="caption"><span>Surface swimming, aerial view</span></div>
+    </div>
+
+    <!-- Row 7 -->
+    <div class="gallery-item" data-caption="Underwater dive">
+      <img src="uploads/swimm.avif" alt="Platypus diving" />
+      <div class="caption"><span>Underwater dive</span></div>
+    </div>
+    <div class="gallery-item" data-caption="Head-on — bill sensors active">
+      <img src="uploads/pexels-focus-9551971.jpg" alt="Platypus close-up swimming" />
+      <div class="caption"><span>Head-on — bill sensors active</span></div>
+    </div>
+    <div class="gallery-item" data-caption="Habitat — creek-side vegetation">
+      <img src="uploads/Nature.avif" alt="Dense green foliage" />
+      <div class="caption"><span>Habitat — creek-side vegetation</span></div>
+    </div>
+
+    <!-- Row 8 -->
+    <div class="gallery-item wide" data-caption="Riparian meadow — platypus country">
+      <img src="uploads/Bannerpage1.jpg" alt="Landscape banner" style="object-position: center 60%;" />
+      <div class="caption"><span>Riparian meadow — platypus country</span></div>
+    </div>
+
+
+  </main>
+
+  <footer>
+    <p>© 2026 Platypus — A Natural History</p>
+    <p><a href="sources.html" style="color:var(--moss);text-decoration:none;font-size:11px;letter-spacing:0.1em;">View all sources →</a></p>
+  </footer>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox">
+    <div class="lightbox-inner">
+      <button class="lightbox-close" id="lbClose">Close ✕</button>
+      <button class="lightbox-nav lightbox-prev" id="lbPrev">‹</button>
+      <img id="lbImg" src="" alt="" />
+      <button class="lightbox-nav lightbox-next" id="lbNext">›</button>
+    </div>
+  </div>
+
+  <script>
+    const items = Array.from(document.querySelectorAll('.gallery-item'));
+    const lb = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lbImg');
+    let current = 0;
+
+    function openLightbox(idx) {
+      current = idx;
+      lbImg.src = items[idx].querySelector('img').src;
+      lbImg.alt = items[idx].querySelector('img').alt;
+      lb.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      lb.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    items.forEach((item, i) => item.addEventListener('click', () => openLightbox(i)));
+    document.getElementById('lbClose').addEventListener('click', closeLightbox);
+    document.getElementById('lbPrev').addEventListener('click', (e) => { e.stopPropagation(); openLightbox((current - 1 + items.length) % items.length); });
+    document.getElementById('lbNext').addEventListener('click', (e) => { e.stopPropagation(); openLightbox((current + 1) % items.length); });
+    lb.addEventListener('click', (e) => { if (e.target === lb) closeLightbox(); });
+    document.addEventListener('keydown', (e) => {
+      if (!lb.classList.contains('open')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') openLightbox((current - 1 + items.length) % items.length);
+      if (e.key === 'ArrowRight') openLightbox((current + 1) % items.length);
+    });
+  </script>
+</body>
+</html>

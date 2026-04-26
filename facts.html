@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Platypus — Facts</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,200;0,300;0,400;1,200;1,300&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --cream:       oklch(96.5% 0.012 82);
+      --cream-mid:   oklch(91%   0.018 78);
+      --earth:       oklch(48%   0.04  68);
+      --moss:        oklch(46%   0.07 142);
+      --moss-light:  oklch(72%   0.06 142);
+      --ink:         oklch(16%   0.018 75);
+      --ink-soft:    oklch(35%   0.022 75);
+      --ink-faint:   oklch(55%   0.018 75);
+      --glass-bg:    oklch(97% 0.01 82 / 0.72);
+      --glass-border:oklch(80% 0.02 82 / 0.5);
+      --accent:      oklch(46%   0.07 142);
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Jost', sans-serif; background: var(--cream); color: var(--ink); overflow-x: hidden; }
+
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 48px; background: var(--glass-bg); backdrop-filter: blur(24px) saturate(1.6); -webkit-backdrop-filter: blur(24px) saturate(1.6); border-bottom: 1px solid var(--glass-border); }
+    .nav-logo { font-family: 'Cormorant', serif; font-weight: 200; font-size: 18px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink); text-decoration: none; }
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a { font-size: 12px; font-weight: 300; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-soft); text-decoration: none; transition: color 0.25s; position: relative; }
+    .nav-links a::after { content: ''; position: absolute; bottom: -3px; left: 0; width: 0; height: 1px; background: var(--accent); transition: width 0.3s cubic-bezier(0.22,1,0.36,1); }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-links a.active { color: var(--ink); }
+    .nav-links a.active::after { width: 100%; }
+
+    .page-header { padding: 140px 80px 80px; display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: end; border-bottom: 1px solid var(--glass-border); }
+    .page-eyebrow { font-size: 11px; font-weight: 400; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent); margin-bottom: 20px; }
+    .page-title { font-family: 'Cormorant', serif; font-weight: 200; font-size: clamp(52px, 6vw, 96px); line-height: 0.9; color: var(--ink); }
+    .page-title em { font-style: italic; color: var(--earth); }
+    .page-intro-text { font-size: 15px; font-weight: 300; line-height: 1.75; color: var(--ink-soft); max-width: 440px; align-self: end; }
+
+    .facts-grid { display: grid; gap: 2px; background: var(--cream-mid); padding: 2px; transition: grid-template-columns 0.4s; }
+    .facts-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+    .facts-grid.cols-1 { grid-template-columns: 1fr; }
+
+    .fact-card { background: var(--cream); display: grid; grid-template-rows: auto 1fr; overflow: hidden; transition: background 0.3s; }
+    .fact-card:hover { background: oklch(94.5% 0.016 82); }
+
+    .fact-photo { position: relative; overflow: hidden; transition: height 0.4s cubic-bezier(0.22,1,0.36,1); }
+    .fact-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s cubic-bezier(0.22,1,0.36,1); filter: saturate(0.85); }
+    .fact-card:hover .fact-photo img { transform: scale(1.04); }
+
+    .fact-num {
+      position: absolute; bottom: -12px; right: 24px;
+      font-family: 'Cormorant', serif; font-weight: 200;
+      font-size: 120px; line-height: 1; color: var(--cream);
+      opacity: 0.9; pointer-events: none;
+      text-shadow: 0 2px 24px oklch(0% 0 0 / 0.15);
+      transition: opacity 0.3s;
+    }
+    .fact-num.hidden { opacity: 0; }
+
+    .fact-body { padding: 40px 48px 48px; display: flex; flex-direction: column; gap: 14px; }
+    .fact-tag { font-size: 10px; font-weight: 400; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent); }
+    .fact-title { font-family: 'Cormorant', serif; font-weight: 300; font-size: 28px; line-height: 1.2; color: var(--ink); }
+    .fact-text { line-height: 1.75; color: var(--ink-soft); transition: font-size 0.2s; }
+    .fact-source { font-size: 10px; letter-spacing: 0.12em; color: var(--ink-faint); margin-top: auto; padding-top: 16px; border-top: 1px solid var(--glass-border); }
+    .fact-source a { color: var(--accent); text-decoration: none; }
+    .fact-source a:hover { text-decoration: underline; }
+
+    footer { padding: 32px 80px; border-top: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center; }
+    footer p { font-size: 11px; letter-spacing: 0.1em; color: var(--ink-faint); }
+
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.8s cubic-bezier(0.22,1,0.36,1), transform 0.8s cubic-bezier(0.22,1,0.36,1); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a class="nav-logo" href="index.html">Platypus</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="facts.html" class="active">Facts</a></li>
+      <li><a href="habitat.html">Habitat</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="sources.html">Sources</a></li>
+    </ul>
+  </nav>
+
+  <header class="page-header">
+    <div>
+      <p class="page-eyebrow">Ornithorhynchus anatinus</p>
+      <h1 class="page-title">Six<br /><em>remarkable</em><br />truths.</h1>
+    </div>
+    <p class="page-intro-text">The platypus defies nearly every rule of mammalian biology. From venomous spurs to electric bills, these are six facts that make it unlike anything else on Earth.</p>
+  </header>
+
+  <div id="facts-root"></div>
+
+  <footer>
+    <p>© 2026 Platypus — A Natural History</p>
+    <p><a href="sources.html" style="color:var(--moss);text-decoration:none;font-size:11px;letter-spacing:0.1em;">View all sources →</a></p>
+  </footer>
+
+  <script type="text/babel" src="tweaks-panel.jsx"></script>
+
+  <script type="text/babel">
+    const FACTS = [
+      {
+        num: "01", tag: "Reproduction",
+        title: "It lays eggs — and nurses with milk",
+        text: "The platypus is one of only five living monotreme species: mammals that lay leathery eggs instead of giving birth to live young. After hatching, puggle young lap milk that seeps through pores in the mother's skin — she has no nipples.",
+        source: "Australian Museum; National Geographic",
+        img: "uploads/babies.webp",
+        alt: "Newborn platypus puggles in researcher's hands"
+      },
+      {
+        num: "02", tag: "Senses",
+        title: "Its bill detects electric fields",
+        text: "Packed with roughly 40,000 electroreceptors, the platypus bill can sense the faint electrical impulses generated by prey muscle contractions — hunting entirely with eyes, ears, and nose closed underwater.",
+        source: "Encyclopædia Britannica; CSIRO",
+        img: "uploads/240_F_1101777271_s2p4tK0XCukhrJ9R7XlI2paVc5HDt6Rh.jpg",
+        alt: "Platypus bill near water surface"
+      },
+      {
+        num: "03", tag: "Defence",
+        title: "Males carry a venomous ankle spur",
+        text: "Each male has a hollow keratin spur on its hind ankles connected to a crural gland producing complex venom. Potent enough to kill a dog and cause prolonged, opioid-resistant pain in humans — it is one of the few truly venomous mammals.",
+        source: "Australian Museum; Journal of Proteomics",
+        img: "uploads/skeleton.avif",
+        alt: "Platypus skeleton showing hind leg anatomy",
+        imgPosition: "center 40%"
+      },
+      {
+        num: "04", tag: "Anatomy",
+        title: "It has no stomach",
+        text: "Unlike most vertebrates, the platypus lacks a true stomach. Food passes directly from the oesophagus into the intestine for digestion. Scientists believe the stomach was simply lost over millions of years of evolution.",
+        source: "PLOS ONE (2013); Australian Platypus Conservancy",
+        img: "uploads/eating.webp",
+        alt: "Platypus foraging"
+      },
+      {
+        num: "05", tag: "Physiology",
+        title: "Fat is stored in the tail, not the body",
+        text: "The platypus stores the majority of its body fat reserves in its broad, beaver-like tail — not distributed across its torso as in most mammals. A depleted, thin tail is a reliable indicator of poor health or food scarcity.",
+        source: "San Diego Zoo Wildlife Alliance; IUCN Red List",
+        img: "uploads/chillin.webp",
+        alt: "Platypus resting"
+      },
+      {
+        num: "06", tag: "Discovery",
+        title: "Its fur glows blue-green under UV light",
+        text: "In 2020, researchers documented that platypus fur exhibits biofluorescence — absorbing ultraviolet light and re-emitting it as a cyan-green glow. The biological purpose remains unknown, making it one of the most recent surprising discoveries about the species.",
+        source: "Mammalia journal (2020); University of Nebraska–Lincoln",
+        img: "uploads/240_F_1644108809_MrOqg5dk0lbZkrmUBioloHBIomE7WqF0.jpg",
+        alt: "Platypus gliding underwater in clear stream"
+      }
+    ];
+
+    const QUICK_FACTS = [
+      { tag: "Anatomy",     text: "The platypus bill is soft and rubbery — nothing like a duck's hard beak. It's a sensitive sensory organ packed with nerve endings." },
+      { tag: "Behaviour",   text: "While hunting, platypuses store food — shrimp, worms, larvae — in cheek pouches, then surface to chew and swallow at the water's edge." },
+      { tag: "Swimming",    text: "Platypuses are expert swimmers and can hold their breath for 30 to 60 seconds on a dive, closing their eyes, ears, and nose completely underwater." },
+      { tag: "Naming",      text: "Baby platypuses are called puggles — a name shared with baby echidnas. They hatch blind, hairless, and about the size of a lima bean." },
+      { tag: "History",     text: "When the first platypus specimen reached Britain in 1799, scientists thought it was a taxidermy hoax — a duck's bill sewn onto a beaver-like body." },
+    ];
+
+    const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+      "columns": "2",
+      "imageHeight": 320,
+      "accentColor": "moss",
+      "textSize": 14
+    }/*EDITMODE-END*/;
+
+    const ACCENT_MAP = {
+      moss:  "oklch(46% 0.07 142)",
+      earth: "oklch(48% 0.04 68)",
+      slate: "oklch(42% 0.04 240)"
+    };
+
+    function FactsApp() {
+      const [tweaks, setTweak] = useTweaks(TWEAK_DEFAULTS);
+
+      // Apply accent color to CSS var
+      React.useEffect(() => {
+        document.documentElement.style.setProperty('--accent', ACCENT_MAP[tweaks.accentColor] || ACCENT_MAP.moss);
+      }, [tweaks.accentColor]);
+
+      const gridClass = `facts-grid cols-${tweaks.columns}`;
+
+      return (
+        <>
+          <div className={gridClass}>
+            {FACTS.map((f) => (
+              <div className="fact-card reveal" key={f.num}>
+                <div className="fact-photo" style={{ height: tweaks.imageHeight }}>
+                  <img
+                    src={f.img}
+                    alt={f.alt}
+                    style={{ objectPosition: f.imgPosition || "center center" }}
+                  />
+
+                </div>
+                <div className="fact-body">
+                  <span className="fact-tag">{f.tag}</span>
+                  <h2 className="fact-title">{f.title}</h2>
+                  <p className="fact-text" style={{ fontSize: tweaks.textSize }}>{f.text}</p>
+                  <p className="fact-source">Source: <a href="sources.html">{f.source}</a></p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* QUICK FACTS STRIP */}
+          <div style={{
+            position: "relative",
+            overflow: "hidden",
+            borderTop: "2px solid var(--glass-border)"
+          }}>
+            {/* Background video */}
+            <video
+              autoPlay muted loop playsInline
+              style={{
+                position: "absolute", inset: 0,
+                width: "100%", height: "100%",
+                objectFit: "cover",
+                filter: "saturate(0.8)"
+              }}
+            >
+              <source src="uploads/vecteezy_platypus-duck-billed-rare-endangered-australian-mammal-4k-ai_74277562.mp4" type="video/mp4" />
+            </video>
+            {/* Dark gradient veil */}
+            <div style={{
+              position: "absolute", inset: 0,
+              background: "oklch(8% 0.015 75 / 0.15)"
+            }} />
+            {/* Content */}
+            <div style={{ position: "relative", zIndex: 1, padding: "80px 80px 96px" }}>
+              <div style={{ marginBottom: 40 }}>
+                <p style={{ fontSize: 11, fontWeight: 400, letterSpacing: "0.22em", textTransform: "uppercase", color: "var(--moss-light)", marginBottom: 10 }}>Quick Facts</p>
+                <h2 style={{ fontFamily: "'Cormorant', serif", fontWeight: 200, fontSize: "clamp(32px, 3.5vw, 56px)", lineHeight: 1, color: "var(--cream)" }}>Also worth knowing.</h2>
+              </div>
+              <div style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+                gap: 2
+              }}>
+                {QUICK_FACTS.map((qf, i) => (
+                  <div key={i} style={{
+                    background: "oklch(97% 0.01 82 / 0.82)",
+                    backdropFilter: "blur(12px)",
+                    WebkitBackdropFilter: "blur(12px)",
+                    border: "1px solid oklch(100% 0 0 / 0.4)",
+                    padding: "32px 36px",
+                    display: "flex",
+                    gap: 20,
+                    alignItems: "flex-start",
+                    transition: "background 0.25s"
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.background = "oklch(95% 0.014 82 / 0.92)"}
+                  onMouseLeave={e => e.currentTarget.style.background = "oklch(97% 0.01 82 / 0.82)"}
+                  >
+                    <span style={{
+                      fontFamily: "'Cormorant', serif",
+                      fontWeight: 200,
+                      fontSize: 32,
+                      lineHeight: 1,
+                      color: "var(--moss)",
+                      opacity: 0.6,
+                      flexShrink: 0,
+                      paddingTop: 2
+                    }}>{String(i + 1).padStart(2, "0")}</span>
+                    <div>
+                      <p style={{ fontSize: 11, fontWeight: 500, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--moss)", marginBottom: 10 }}>{qf.tag}</p>
+                      <p style={{ fontSize: Math.max(tweaks.textSize, 16), fontWeight: 400, lineHeight: 1.75, color: "var(--ink)" }}>{qf.text}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <TweaksPanel>
+            <TweakSection label="Layout">
+              <TweakRadio
+                label="Grid columns"
+                value={tweaks.columns}
+                options={[{ label: "1 col", value: "1" }, { label: "2 col", value: "2" }]}
+                onChange={(v) => setTweak("columns", v)}
+              />
+              <TweakSlider
+                label="Image height"
+                value={tweaks.imageHeight}
+                min={180} max={520} step={20}
+                onChange={(v) => setTweak("imageHeight", v)}
+              />
+            </TweakSection>
+            <TweakSection label="Typography">
+              <TweakSlider
+                label="Body text size"
+                value={tweaks.textSize}
+                min={11} max={18} step={1}
+                onChange={(v) => setTweak("textSize", v)}
+              />
+            </TweakSection>
+            <TweakSection label="Style">
+
+              <TweakRadio
+                label="Accent colour"
+                value={tweaks.accentColor}
+                options={[
+                  { label: "Moss", value: "moss" },
+                  { label: "Earth", value: "earth" },
+                  { label: "Slate", value: "slate" }
+                ]}
+                onChange={(v) => setTweak("accentColor", v)}
+              />
+            </TweakSection>
+          </TweaksPanel>
+        </>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("facts-root")).render(<FactsApp />);
+
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) { e.target.classList.add("visible"); observer.unobserve(e.target); }
+      });
+    }, { threshold: 0.1 });
+    setTimeout(() => {
+      document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
+    }, 100);
+  </script>
+</body>
+</html>

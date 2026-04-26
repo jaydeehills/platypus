@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Platypus — Habitat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <template id="__bundler_thumbnail" data-bg-color="#1a1612">
+    <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+      <rect width="1200" height="800" fill="#1a1612"/>
+      <rect x="60" y="60" width="540" height="680" rx="2" fill="#222018" opacity="0.8"/>
+      <rect x="640" y="60" width="500" height="680" rx="2" fill="#1e1c14" opacity="0.8"/>
+      <text x="890" y="380" font-family="serif" font-size="56" fill="#c8c0a0" text-anchor="middle" font-style="italic" opacity="0.85">Habitat.</text>
+      <text x="890" y="440" font-family="sans-serif" font-size="16" fill="#5a7a5a" text-anchor="middle" letter-spacing="4">THREE ZONES</text>
+    </svg>
+  </template>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,200;0,300;0,400;1,200;1,300&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:       oklch(96.5% 0.012 82);
+      --cream-mid:   oklch(91%   0.018 78);
+      --earth:       oklch(48%   0.04  68);
+      --moss:        oklch(46%   0.07 142);
+      --moss-light:  oklch(72%   0.06 142);
+      --ink:         oklch(16%   0.018 75);
+      --ink-soft:    oklch(35%   0.022 75);
+      --ink-faint:   oklch(55%   0.018 75);
+      --glass-bg:    oklch(97% 0.01 82 / 0.72);
+      --glass-border:oklch(80% 0.02 82 / 0.5);
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Jost', sans-serif; background: var(--ink); color: var(--cream); overflow-x: hidden; }
+
+    /* NAV */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 48px; background: var(--glass-bg); backdrop-filter: blur(24px) saturate(1.6); -webkit-backdrop-filter: blur(24px) saturate(1.6); border-bottom: 1px solid var(--glass-border); }
+    .nav-logo { font-family: 'Cormorant', serif; font-weight: 200; font-size: 18px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink); text-decoration: none; }
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a { font-size: 12px; font-weight: 300; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-soft); text-decoration: none; transition: color 0.25s; position: relative; }
+    .nav-links a::after { content: ''; position: absolute; bottom: -3px; left: 0; width: 0; height: 1px; background: var(--moss); transition: width 0.3s cubic-bezier(0.22,1,0.36,1); }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-links a.active { color: var(--ink); }
+    .nav-links a.active::after { width: 100%; }
+
+    /* PAGE INTRO — dark, full bleed */
+    .page-intro-band {
+      padding: 140px 80px 96px;
+      background: var(--ink);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: end;
+    }
+
+    .page-eyebrow { font-size: 11px; font-weight: 400; letter-spacing: 0.22em; text-transform: uppercase; color: var(--moss-light); margin-bottom: 24px; }
+    .page-title { font-family: 'Cormorant', serif; font-weight: 200; font-size: clamp(52px, 6vw, 96px); line-height: 0.9; color: var(--cream); }
+    .page-title em { font-style: italic; color: oklch(72% 0.045 75); }
+
+    .intro-right { display: flex; flex-direction: column; gap: 24px; align-self: end; }
+    .intro-text { font-size: 15px; font-weight: 300; line-height: 1.8; color: oklch(75% 0.014 82); }
+    .range-note { font-size: 12px; font-weight: 300; letter-spacing: 0.1em; color: var(--moss-light); padding-top: 16px; border-top: 1px solid oklch(30% 0.02 75); }
+
+    /* RANGE MAP STRIP */
+    .range-strip {
+      background: oklch(12% 0.015 75);
+      padding: 56px 80px;
+      display: flex;
+      align-items: center;
+      gap: 80px;
+      border-top: 1px solid oklch(22% 0.02 75);
+      border-bottom: 1px solid oklch(22% 0.02 75);
+    }
+
+    .range-map { flex-shrink: 0; }
+
+    .range-stats { display: flex; gap: 56px; flex: 1; }
+    .range-stat { display: flex; flex-direction: column; gap: 6px; }
+    .stat-num {
+      font-family: 'Cormorant', serif; font-weight: 200;
+      font-size: 48px; line-height: 1; color: var(--cream);
+    }
+    .stat-label { font-size: 11px; font-weight: 300; letter-spacing: 0.16em; text-transform: uppercase; color: oklch(60% 0.018 82); }
+    .stat-desc { font-size: 13px; font-weight: 300; color: oklch(55% 0.018 82); line-height: 1.5; max-width: 180px; }
+
+    /* ZONE SECTIONS */
+    .zone {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 640px;
+    }
+
+    .zone:nth-child(even) { direction: rtl; }
+    .zone:nth-child(even) > * { direction: ltr; }
+
+    .zone-photo {
+      position: relative;
+      overflow: hidden;
+    }
+    .zone-photo img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: saturate(0.78) brightness(0.88);
+      transition: transform 8s cubic-bezier(0.22,1,0.36,1);
+    }
+    .zone:hover .zone-photo img { transform: scale(1.04); }
+
+    .zone-photo-credit {
+      position: absolute;
+      bottom: 12px; right: 14px;
+      font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
+      color: oklch(80% 0.01 82 / 0.6);
+    }
+
+    .zone-content {
+      background: oklch(11% 0.016 75);
+      padding: 72px 64px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .zone-num {
+      font-family: 'Cormorant', serif; font-weight: 200;
+      font-size: 80px; line-height: 1; color: oklch(22% 0.02 75);
+      margin-bottom: -8px;
+    }
+
+    .zone-tag { font-size: 10px; font-weight: 400; letter-spacing: 0.24em; text-transform: uppercase; color: var(--moss-light); }
+    .zone-title { font-family: 'Cormorant', serif; font-weight: 200; font-size: clamp(32px, 3vw, 52px); line-height: 1.1; color: var(--cream); }
+    .zone-title em { font-style: italic; color: oklch(72% 0.045 75); }
+    .zone-body { font-size: 14px; font-weight: 300; line-height: 1.8; color: oklch(65% 0.016 82); max-width: 440px; }
+
+    .zone-details {
+      display: flex; flex-direction: column; gap: 10px;
+      padding-top: 20px; border-top: 1px solid oklch(22% 0.02 75);
+    }
+    .detail-row { display: flex; gap: 12px; align-items: baseline; }
+    .detail-label { font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--moss-light); width: 90px; flex-shrink: 0; }
+    .detail-val { font-size: 13px; font-weight: 300; color: oklch(70% 0.016 82); }
+
+    /* THREAT BAND */
+    .threat-band {
+      background: var(--ink);
+      padding: 96px 80px;
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 80px;
+      align-items: center;
+      border-top: 1px solid oklch(22% 0.02 75);
+    }
+
+    .threat-heading { font-family: 'Cormorant', serif; font-weight: 200; font-size: clamp(36px, 4vw, 64px); line-height: 1.05; color: var(--cream); }
+    .threat-heading em { font-style: italic; color: oklch(72% 0.045 75); }
+
+    .threat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+    .threat-item { display: flex; flex-direction: column; gap: 8px; padding-bottom: 24px; border-bottom: 1px solid oklch(22% 0.02 75); }
+    .threat-name { font-size: 13px; font-weight: 400; letter-spacing: 0.08em; color: var(--cream); }
+    .threat-desc { font-size: 12px; font-weight: 300; line-height: 1.65; color: oklch(55% 0.016 82); }
+
+    .iucn-badge {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: oklch(18% 0.02 75); padding: 10px 18px;
+      border: 1px solid oklch(30% 0.03 75);
+      margin-top: 8px; width: fit-content;
+    }
+    .iucn-dot { width: 10px; height: 10px; background: oklch(68% 0.12 85); border-radius: 50%; }
+    .iucn-text { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: oklch(70% 0.018 82); }
+
+    /* FOOTER */
+    footer {
+      padding: 32px 80px;
+      border-top: 1px solid oklch(22% 0.02 75);
+      display: flex; justify-content: space-between; align-items: center;
+      background: oklch(10% 0.015 75);
+    }
+    footer p { font-size: 11px; letter-spacing: 0.1em; color: oklch(40% 0.016 82); }
+    footer a { color: var(--moss-light); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* SCROLL REVEAL */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.9s cubic-bezier(0.22,1,0.36,1), transform 0.9s cubic-bezier(0.22,1,0.36,1); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a class="nav-logo" href="index.html">Platypus</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="facts.html">Facts</a></li>
+      <li><a href="habitat.html" class="active">Habitat</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="sources.html">Sources</a></li>
+    </ul>
+  </nav>
+
+  <!-- INTRO -->
+  <section class="page-intro-band">
+    <div>
+      <p class="page-eyebrow">Where it lives</p>
+      <h1 class="page-title">A life<br />along the<br /><em>water's edge.</em></h1>
+    </div>
+    <div class="intro-right">
+      <p class="intro-text">The platypus is endemic to eastern Australia — found only where freshwater meets dense riverbank vegetation. It is a semi-aquatic specialist: a creature of margins, burrows, and cold, clean streams.</p>
+      <p class="range-note">Range: Queensland → Victoria → Tasmania · Elevation: sea level to 1,000 m</p>
+    </div>
+  </section>
+
+  <!-- RANGE STATS -->
+  <div class="range-strip">
+
+    <!-- Australia outline SVG — eastern range highlighted -->
+    <div class="range-map">
+      <svg width="160" height="180" viewBox="0 0 160 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Simplified Australia outline -->
+        <path d="M60 8 L90 6 L112 14 L128 30 L138 52 L142 76 L140 96 L132 112 L120 124 L118 140 L110 152 L100 160 L88 164 L80 158 L72 148 L66 136 L58 128 L48 124 L36 120 L24 108 L18 90 L20 70 L28 50 L38 30 L50 16 Z" fill="oklch(18% 0.018 75)" stroke="oklch(28% 0.025 75)" stroke-width="1.5"/>
+        <!-- Eastern range highlight (QLD, NSW, VIC) -->
+        <path d="M118 140 L110 152 L100 160 L88 164 L80 158 L72 148 L66 136 L58 128 L48 124 L50 110 L58 100 L66 92 L74 84 L82 80 L92 80 L102 84 L112 92 L120 104 L124 118 L120 130 Z" fill="oklch(46% 0.07 142 / 0.35)" stroke="none"/>
+        <!-- Tasmania -->
+        <ellipse cx="90" cy="174" rx="10" ry="6" fill="oklch(46% 0.07 142 / 0.35)" stroke="none"/>
+        <ellipse cx="90" cy="174" rx="10" ry="6" fill="none" stroke="oklch(46% 0.07 142)" stroke-width="1"/>
+        <!-- Range label -->
+        <text x="80" y="120" font-family="Jost, sans-serif" font-size="7" fill="oklch(72% 0.06 142)" text-anchor="middle" letter-spacing="1">RANGE</text>
+        <!-- Dot markers -->
+        <circle cx="88" cy="108" r="2.5" fill="var(--moss-light)"/>
+        <circle cx="76" cy="130" r="2" fill="var(--moss-light)" opacity="0.7"/>
+        <circle cx="90" cy="174" r="2" fill="var(--moss-light)" opacity="0.6"/>
+      </svg>
+    </div>
+
+    <div class="range-stats">
+      <div class="range-stat reveal">
+        <span class="stat-num">3</span>
+        <span class="stat-label">Habitat zones</span>
+        <span class="stat-desc">Subtropical to cool temperate</span>
+      </div>
+      <div class="range-stat reveal">
+        <span class="stat-num">~300k</span>
+        <span class="stat-label">Estimated population</span>
+        <span class="stat-desc">Down significantly from 19th century levels</span>
+      </div>
+      <div class="range-stat reveal">
+        <span class="stat-num">14°C</span>
+        <span class="stat-label">Preferred water temp</span>
+        <span class="stat-desc">Cold, well-oxygenated streams only</span>
+      </div>
+      <div class="range-stat reveal">
+        <span class="stat-num">NT</span>
+        <span class="stat-label">IUCN status</span>
+        <span class="stat-desc">Near Threatened — listed since 2016</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ZONE 1: QUEENSLAND -->
+  <div class="zone reveal">
+    <div class="zone-photo">
+      <img src="uploads/swimming.jpg" alt="Rainforest stream in Queensland" />
+      <span class="zone-photo-credit">Rainforest stream, Queensland — via uploaded collection</span>
+    </div>
+    <div class="zone-content">
+      <span class="zone-num">01</span>
+      <span class="zone-tag">Zone One</span>
+      <h2 class="zone-title">Queensland &amp;<br /><em>Subtropical Streams</em></h2>
+      <p class="zone-body">From the Atherton Tablelands south through the coastal ranges, platypuses inhabit the cool, shaded waterways fed by Queensland's highland rainforests. The Daintree catchment and Carnarvon Gorge represent the northern and western edges of their continental range. Here, dense riparian vegetation provides ideal burrowing sites along steep clay banks.</p>
+      <div class="zone-details">
+        <div class="detail-row"><span class="detail-label">Waterways</span><span class="detail-val">Mossman, Mary, Noosa, Burnett rivers</span></div>
+        <div class="detail-row"><span class="detail-label">Elevation</span><span class="detail-val">50 – 800 m above sea level</span></div>
+        <div class="detail-row"><span class="detail-label">Key feature</span><span class="detail-val">Subtropical rainforest canopy shading</span></div>
+        <div class="detail-row"><span class="detail-label">Threat</span><span class="detail-val">Drought, agricultural runoff, sedimentation</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ZONE 2: NSW / VICTORIA -->
+  <div class="zone reveal">
+    <div class="zone-photo">
+      <img src="uploads/swimming2.jpg" alt="Freshwater creek, Victoria" />
+      <span class="zone-photo-credit">Freshwater creek, Victoria — via uploaded collection</span>
+    </div>
+    <div class="zone-content">
+      <span class="zone-num">02</span>
+      <span class="zone-tag">Zone Two</span>
+      <h2 class="zone-title">NSW &amp; Victoria —<br /><em>The Heartland</em></h2>
+      <p class="zone-body">The Murray-Darling basin, the rivers of the Great Dividing Range, and the cool streams of the Victorian highlands form the core of platypus territory. Healesville, Tidbinbilla, and the upper Murrumbidgee are among the most reliably sighted locations on the continent. Cool, clear water with abundant invertebrate prey — shrimp, yabbies, insect larvae — defines the ideal conditions.</p>
+      <div class="zone-details">
+        <div class="detail-row"><span class="detail-label">Waterways</span><span class="detail-val">Murrumbidgee, Yarra, Snowy, Lachlan</span></div>
+        <div class="detail-row"><span class="detail-label">Elevation</span><span class="detail-val">Sea level – 1,000 m</span></div>
+        <div class="detail-row"><span class="detail-label">Key feature</span><span class="detail-val">Highest documented population density</span></div>
+        <div class="detail-row"><span class="detail-label">Threat</span><span class="detail-val">River regulation, water extraction</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ZONE 3: TASMANIA -->
+  <div class="zone reveal">
+    <div class="zone-photo">
+      <img src="uploads/p1.jpg" alt="Cold creek, Tasmania" style="object-position: center 30%;" />
+      <span class="zone-photo-credit">Creek habitat, eastern Australia — via uploaded collection</span>
+    </div>
+    <div class="zone-content">
+      <span class="zone-num">03</span>
+      <span class="zone-tag">Zone Three</span>
+      <h2 class="zone-title">Tasmania —<br /><em>Cold &amp; Pristine</em></h2>
+      <p class="zone-body">Tasmania harbours some of the most intact platypus habitat on Earth. The island's relatively undisturbed river systems — including the Arthur, Huon, and Derwent — run cold and clean through temperate rainforest. Tasmanian platypuses tend to be larger than their mainland counterparts, an adaptation to the colder climate, and populations here are considered among the most stable.</p>
+      <div class="zone-details">
+        <div class="detail-row"><span class="detail-label">Waterways</span><span class="detail-val">Huon, Derwent, Arthur, Mersey rivers</span></div>
+        <div class="detail-row"><span class="detail-label">Elevation</span><span class="detail-val">Sea level – 900 m</span></div>
+        <div class="detail-row"><span class="detail-label">Key feature</span><span class="detail-val">Largest body size; most stable populations</span></div>
+        <div class="detail-row"><span class="detail-label">Threat</span><span class="detail-val">Introduced predators (foxes); climate change</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- THREATS -->
+  <section class="threat-band">
+    <div class="reveal">
+      <h2 class="threat-heading">A habitat<br />under<br /><em>pressure.</em></h2>
+      <div class="iucn-badge">
+        <div class="iucn-dot"></div>
+        <span class="iucn-text">IUCN Near Threatened · 2016</span>
+      </div>
+    </div>
+    <div class="threat-grid">
+      <div class="threat-item reveal">
+        <span class="threat-name">Climate change &amp; drought</span>
+        <p class="threat-desc">Reduced rainfall and prolonged drought events lower stream flows, concentrating platypuses in smaller refuges and increasing competition and predation risk.</p>
+      </div>
+      <div class="threat-item reveal">
+        <span class="threat-name">Land clearing &amp; sedimentation</span>
+        <p class="threat-desc">Agriculture and development strip riparian vegetation, destabilising banks used for burrows and increasing sediment loads that smother invertebrate prey.</p>
+      </div>
+      <div class="threat-item reveal">
+        <span class="threat-name">Water extraction &amp; dams</span>
+        <p class="threat-desc">River regulation alters flow regimes and water temperatures, fragmenting populations and reducing the cold, well-oxygenated conditions platypuses require.</p>
+      </div>
+      <div class="threat-item reveal">
+        <span class="threat-name">Entanglement &amp; pollution</span>
+        <p class="threat-desc">Discarded fishing line, yabby traps, and plastic debris cause drowning; agricultural and urban runoff degrades water quality and depletes food sources.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2026 Platypus — A Natural History</p>
+    <p><a href="sources.html">View all sources →</a></p>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>

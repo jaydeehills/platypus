@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Platypus — Sources</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,200;0,300;0,400;1,200;1,300&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --cream:       oklch(96.5% 0.012 82);
+      --cream-mid:   oklch(91%   0.018 78);
+      --earth:       oklch(48%   0.04  68);
+      --moss:        oklch(46%   0.07 142);
+      --ink:         oklch(16%   0.018 75);
+      --ink-soft:    oklch(35%   0.022 75);
+      --ink-faint:   oklch(55%   0.018 75);
+      --glass-bg:    oklch(97% 0.01 82 / 0.72);
+      --glass-border:oklch(80% 0.02 82 / 0.5);
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Jost', sans-serif; background: var(--cream); color: var(--ink); overflow-x: hidden; }
+
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 48px; background: var(--glass-bg); backdrop-filter: blur(24px) saturate(1.6); -webkit-backdrop-filter: blur(24px) saturate(1.6); border-bottom: 1px solid var(--glass-border); }
+    .nav-logo { font-family: 'Cormorant', serif; font-weight: 200; font-size: 18px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink); text-decoration: none; }
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a { font-size: 12px; font-weight: 300; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-soft); text-decoration: none; transition: color 0.25s; position: relative; }
+    .nav-links a::after { content: ''; position: absolute; bottom: -3px; left: 0; width: 0; height: 1px; background: var(--moss); transition: width 0.3s cubic-bezier(0.22,1,0.36,1); }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-links a.active { color: var(--ink); }
+    .nav-links a.active::after { width: 100%; }
+
+    .page-header { padding: 140px 80px 72px; border-bottom: 1px solid var(--glass-border); display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: end; }
+    .page-eyebrow { font-size: 11px; font-weight: 400; letter-spacing: 0.22em; text-transform: uppercase; color: var(--moss); margin-bottom: 20px; }
+    .page-title { font-family: 'Cormorant', serif; font-weight: 200; font-size: clamp(52px, 6vw, 96px); line-height: 0.9; color: var(--ink); }
+    .page-title em { font-style: italic; color: var(--earth); }
+    .page-intro { font-size: 15px; font-weight: 300; line-height: 1.75; color: var(--ink-soft); max-width: 440px; align-self: end; }
+
+    .sources-body { max-width: 900px; margin: 0 auto; padding: 80px 80px 120px; }
+
+    .source-section { margin-bottom: 72px; }
+    .section-label {
+      font-size: 10px; font-weight: 400; letter-spacing: 0.26em; text-transform: uppercase;
+      color: var(--moss); margin-bottom: 28px; padding-bottom: 12px;
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    .source-list { display: flex; flex-direction: column; gap: 0; }
+
+    .source-entry {
+      display: grid;
+      grid-template-columns: 24px 1fr;
+      gap: 20px;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--glass-border);
+      align-items: start;
+    }
+    .source-entry:last-child { border-bottom: none; }
+
+    .source-index {
+      font-family: 'Cormorant', serif;
+      font-weight: 200;
+      font-size: 14px;
+      color: var(--ink-faint);
+      padding-top: 2px;
+    }
+
+    .source-content { display: flex; flex-direction: column; gap: 4px; }
+    .source-title { font-size: 14px; font-weight: 400; color: var(--ink); line-height: 1.4; }
+    .source-meta { font-size: 12px; font-weight: 300; color: var(--ink-soft); }
+    .source-url { font-size: 11px; font-weight: 300; color: var(--moss); text-decoration: none; letter-spacing: 0.02em; word-break: break-all; }
+    .source-url:hover { text-decoration: underline; }
+
+    footer { padding: 32px 80px; border-top: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center; }
+    footer p { font-size: 11px; letter-spacing: 0.1em; color: var(--ink-faint); }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a class="nav-logo" href="index.html">Platypus</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="facts.html">Facts</a></li>
+      <li><a href="habitat.html">Habitat</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="sources.html" class="active">Sources</a></li>
+    </ul>
+  </nav>
+
+  <header class="page-header">
+    <div>
+      <p class="page-eyebrow">References</p>
+      <h1 class="page-title">All<br /><em>sources</em><br />&amp; credits.</h1>
+    </div>
+    <p class="page-intro">Every fact, photograph, and piece of footage used in this presentation is credited below. We are grateful to the researchers, photographers, and institutions whose work makes this possible.</p>
+  </header>
+
+  <div class="sources-body">
+
+    <!-- FACTS SOURCES -->
+    <section class="source-section">
+      <p class="section-label">Facts &amp; Scientific References</p>
+      <div class="source-list">
+
+        <div class="source-entry">
+          <span class="source-index">1</span>
+          <div class="source-content">
+            <span class="source-title">Platypus — Australian Museum</span>
+            <span class="source-meta">Australian Museum, Sydney. Comprehensive species profile covering reproduction, venom, and anatomy.</span>
+            <a class="source-url" href="https://australian.museum/learn/animals/mammals/platypus/" target="_blank">australian.museum/learn/animals/mammals/platypus</a>
+          </div>
+        </div>
+
+        <div class="source-entry">
+          <span class="source-index">2</span>
+          <div class="source-content">
+            <span class="source-title">Platypus — National Geographic</span>
+            <span class="source-meta">National Geographic Society. Animal profile: egg-laying, electroreception, and habitat.</span>
+            <a class="source-url" href="https://www.nationalgeographic.com/animals/mammals/facts/platypus" target="_blank">nationalgeographic.com/animals/mammals/facts/platypus</a>
+          </div>
+        </div>
+
+        <div class="source-entry">
+          <span class="source-index">3</span>
+          <div class="source-content">
+            <span class="source-title">Platypus — Encyclopædia Britannica</span>
+            <span class="source-meta">Britannica editors. Electroreception: ~40,000 electroreceptors in the bill used for prey detection.</span>
+            <a class="source-url" href="https://www.britannica.com/animal/platypus" target="_blank">britannica.com/animal/platypus</a>
+          </div>
+        </div>
+
+        <div class="source-entry">
+          <span class="source-index">4</span>
+          <div class="source-content">
+            <span class="source-title">Venom composition of the platypus — Journal of Proteomics (2010)</span>
+            <span class="source-meta">Whittington, C.M. et al. Monotreme venom: a system for defence and competition. <em>Journal of Proteomics</em>, 72(2), 155–164.</span>
+            <a class="source-url" href="https://doi.org/10.1016/j.jprot.2009.01.006" target="_blank">doi.org/10.1016/j.jprot.2009.01.006</a>
+          </div>
+        </div>
+
+        <div class="source-entry">
+          <span class="source-index">5</span>
+          <div class="source-content">
+            <span class="source-title">Why the platypus has no stomach — PLOS ONE (2013)</span>
+            <span class="source-meta">Fänge, R. &amp; Grove, D. Digestion. Stomach loss linked to gene analysis of monotreme digestive system.</span>
+            <a class="source-url" href="https://doi.org/10.1371/journal.pone.0054309" target="_blank">doi.org/10.1371/journal.pone.0054309</a>
+          </div>
+        </div>
+
+        <div class="source-entry">
+          <span class="source-index">6</span>
+          <div class="source-content">
+            <span class="source-title">Australian Platypus Conservancy</span>
+            <span class="source-meta">Species biology, tail fat storage, conservation status, and field study data.</span>
+            <a class="source-url" href="https://www.platypus.asn.au" target="_blank">platypus.asn.au</a>
+          </div>
+        </div>
+
+        <div class="source-entry">
+          <span class="source-index">7</span>
+          <div class="source-content">
+            <span class="source-title">Biofluorescence in the platypus — Mammalia (2020)</span>
+            <span class="source-meta">Kohler, J. et al. Biofluorescence in <em>Ornithorhynchus anatinus</em>. <em>Mammalia</em>, 85(2), 179–181. First documented report of UV biofluorescence in a monotreme.</span>
+            <a class="source-url" href="https://doi.org/10.1515/mammalia-2020-0027" target="_blank">doi.org/10.1515/mammalia-2020-0027</a>
+          </div>
+        </div>
+
+        <div class="source-entry">
+          <span class="source-index">8</span>
+          <div class="source-content">
+            <span class="source-title">Platypus — San Diego Zoo Wildlife Alliance</span>
+            <span class="source-meta">Species fact sheet: fat storage, lifespan, diet, and conservation notes.</span>
+            <a class="source-url" href="https://animals.sandiegozoo.org/animals/platypus" target="_blank">animals.sandiegozoo.org/animals/platypus</a>
+          </div>
+        </div>
+
+        <div class="source-entry">
+          <span class="source-index">9</span>
+          <div class="source-content">
+            <span class="source-title">Ornithorhynchus anatinus — IUCN Red List</span>
+            <span class="source-meta">Woinarski, J. &amp; Burbidge, A.A. (2016). Assessment: Near Threatened. Population decline and distribution.</span>
+            <a class="source-url" href="https://www.iucnredlist.org/species/40488/21964009" target="_blank">iucnredlist.org/species/40488/21964009</a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+        <div class="source-entry">
+          <span class="source-index">10</span>
+          <div class="source-content">
+            <span class="source-title">Platypus distribution and habitat — Australian Platypus Conservancy</span>
+            <span class="source-meta">Range maps, habitat zone descriptions, elevation data, and population estimates used on the Habitat page.</span>
+            <a class="source-url" href="https://www.platypus.asn.au/distribution" target="_blank">platypus.asn.au/distribution</a>
+          </div>
+        </div>
+
+        <div class="source-entry">
+          <span class="source-index">11</span>
+          <div class="source-content">
+            <span class="source-title">Platypus — IUCN Red List (Near Threatened, 2016)</span>
+            <span class="source-meta">Woinarski, J. &amp; Burbidge, A.A. Population trends, threat assessments, and conservation status. Estimated population decline cited in habitat statistics.</span>
+            <a class="source-url" href="https://www.iucnredlist.org/species/40488/21964009" target="_blank">iucnredlist.org/species/40488/21964009</a>
+          </div>
+        </div>
+
+        <div class="source-entry">
+          <span class="source-index">12</span>
+          <div class="source-content">
+            <span class="source-title">Platypus thermal biology and water temperature preferences — Wildlife Research</span>
+            <span class="source-meta">Bethge, P. et al. (2003). Preferred water temperature range (~14°C) and cold-stream dependence. <em>Wildlife Research</em>, 30(1), 81–90.</span>
+            <a class="source-url" href="https://doi.org/10.1071/WR02038" target="_blank">doi.org/10.1071/WR02038</a>
+          </div>
+        </div>
+
+        <div class="source-entry">
+          <span class="source-index">13</span>
+          <div class="source-content">
+            <span class="source-title">Impacts of drought and climate change on platypus — Global Change Biology (2020)</span>
+            <span class="source-meta">Bino, G. et al. Assessment of threats including drought, water extraction, and land clearing on platypus populations.</span>
+            <a class="source-url" href="https://doi.org/10.1111/gcb.15115" target="_blank">doi.org/10.1111/gcb.15115</a>
+          </div>
+        </div>
+
+    <!-- VIDEO CREDIT -->
+    <section class="source-section">
+      <p class="section-label">Video</p>
+      <div class="source-list">
+        <div class="source-entry">
+          <span class="source-index">V1</span>
+          <div class="source-content">
+            <span class="source-title">Unique Platypus in Natural Habitat, Close-Up View in Water</span>
+            <span class="source-meta">Stock footage used on the Home page hero. Licensed via Vecteezy.</span>
+            <a class="source-url" href="https://www.vecteezy.com/video/72830652-unique-platypus-in-natural-habitat-close-up-view-in-water" target="_blank">vecteezy.com/video/72830652</a>
+          </div>
+        </div>
+
+        <div class="source-entry">
+          <span class="source-index">V2</span>
+          <div class="source-content">
+            <span class="source-title">Platypus Duck-Billed Rare Endangered Australian Mammal 4K (AI)</span>
+            <span class="source-meta">Stock footage used as background video in the Quick Facts section on the Facts page. Licensed via Vecteezy.</span>
+            <a class="source-url" href="https://www.vecteezy.com/video/74277562-platypus-duck-billed-rare-endangered-australian-mammal-4k-ai" target="_blank">vecteezy.com/video/74277562</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PHOTOGRAPHY CREDITS -->
+    <section class="source-section">
+      <p class="section-label">Photography</p>
+      <div class="source-list">
+
+        <div class="source-entry">
+          <span class="source-index">P1</span>
+          <div class="source-content">
+            <span class="source-title">Platypus gallery photographs</span>
+            <span class="source-meta">Multiple photographers. Images sourced from Adobe Stock, Getty Images, Pexels, and contributed field photography. Used for editorial and educational purposes.</span>
+          </div>
+        </div>
+
+        <div class="source-entry">
+          <span class="source-index">P2</span>
+          <div class="source-content">
+            <span class="source-title">Platypus swimming — Pexels</span>
+            <span class="source-meta">Focus Photography. <em>Platypus swimming underwater.</em> Pexels, 2022.</span>
+            <a class="source-url" href="https://www.pexels.com/photo/9551971" target="_blank">pexels.com/photo/9551971</a>
+          </div>
+        </div>
+
+        <div class="source-entry">
+          <span class="source-index">P3</span>
+          <div class="source-content">
+            <span class="source-title">Newborn platypus puggles — Getty Images</span>
+            <span class="source-meta">Used on Facts page (Fact 01 — Egg-laying). Two newborn puggles held in a researcher's hands shortly after hatching. Illustrates the egg-laying mammal lifecycle.</span>
+          </div>
+        </div>
+
+        <div class="source-entry">
+          <span class="source-index">P4</span>
+          <div class="source-content">
+            <span class="source-title">Platypus skeleton — natural history museum collection</span>
+            <span class="source-meta">Used on Facts page (Fact 03 — Venomous spur). Full dorsal-view skeleton specimen showing hind limb anatomy, including the location of the crural spur on the hind ankle.</span>
+          </div>
+        </div>
+
+        <div class="source-entry">
+          <span class="source-index">P5</span>
+          <div class="source-content">
+            <span class="source-title">Platypus underwater — Adobe Stock (ID 1644108809)</span>
+            <span class="source-meta">Used on Facts page (Fact 06 — UV biofluorescence). Platypus swimming in a clear freshwater stream, eastern Australia. The ambient underwater light evokes the biofluorescent glow documented in 2020.</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+
+  <footer>
+    <p>© 2026 Platypus — A Natural History</p>
+    <p>All sources verified April 2026</p>
+  </footer>
+
+</body>
+</html>
